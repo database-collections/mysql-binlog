@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ tags ]
   pull_request:
-    branches: [ master ]
+    branches: [ tags ]
 
 jobs:
 
@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag docker.pkg.github.com/mysql-collections/mysql-binlog:$(date +%s)
+      run: docker build . --file Dockerfile --tag docker.pkg.github.com/mysql-collections/mysql-binlog:{tag}
