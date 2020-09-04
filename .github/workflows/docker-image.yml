@@ -25,13 +25,16 @@ jobs:
     - name: Build the Docker image
       run: |
         # Strip git ref prefix from version
-        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        IMG_TAG=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
         # Strip "v" prefix from tag name
-        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && IMG_TAG=$(echo $VERSION | sed -e 's/^v//')
         # Use Docker `latest` tag convention
-        [ "$VERSION" == "master" ] && VERSION=latest
+        [ "$IMG_TAG" == "master" ] && IMG_TAG=latest
 
-        echo VERSION=$VERSION
-        docker build . --file Dockerfile --tag docker.pkg.github.com/mysql-collections/mysql-binlog:$VERSION
-        docker push "docker.pkg.github.com/mysql-collections/mysql-binlog:$VERSION"
+        IMG_NAME="mysql"
+        echo IMG_TAG=$IMG_TAG
+        echo IMG_NAME=$IMG_NAME
+        
+        docker build . --file Dockerfile --tag docker.pkg.github.com/mysql-collections/mysql-binlog/$IMG_NAME:$IMG_TAG
+        docker push "docker.pkg.github.com/mysql-collections/mysql-binlog/$IMG_NAME:$IMG_TAG"
 
