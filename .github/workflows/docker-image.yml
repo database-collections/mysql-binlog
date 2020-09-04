@@ -16,6 +16,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
+    - name: Docker login
+      run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p $GITHUB_TOKEN
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      
     - name: Build the Docker image
       run: |
         # Strip git ref prefix from version
@@ -27,3 +33,5 @@ jobs:
 
         echo VERSION=$VERSION
         docker build . --file Dockerfile --tag docker.pkg.github.com/mysql-collections/mysql-binlog:$VERSION
+        docker push "docker.pkg.github.com/mysql-collections/mysql-binlog:$VERSION"
+
